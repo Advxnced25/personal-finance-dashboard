@@ -1,14 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SummaryCards from './components/SummaryCards'
 import TransactionForm from './components/TransactionForm'
 import TransactionList from './components/TransactionList'
 import { mockTransactions } from './mockTransactions'
 import { BASE_CURRENCY } from './money'
+import { loadTransactions, saveTransactions } from './storage'
 import { calculateSummary } from './summary'
 import type { Transaction } from './types'
 
 function App() {
-  const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions)
+  // Load saved data once on start; show sample data on the very first visit
+  const [transactions, setTransactions] = useState<Transaction[]>(
+    () => loadTransactions() ?? mockTransactions,
+  )
+
+  // Save to the browser every time the list changes
+  useEffect(() => {
+    saveTransactions(transactions)
+  }, [transactions])
 
   // Derived data: recalculated from transactions on every render, never stored in state
   const summary = calculateSummary(transactions, BASE_CURRENCY)
