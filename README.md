@@ -1,5 +1,7 @@
 # Personal Finance Dashboard
 
+**[Live demo →](https://advxnced25.github.io/personal-finance-dashboard/)**
+
 A web app for tracking personal income and expenses: add transactions, filter them by month and category, and see totals and charts update instantly. Built with React and TypeScript, with a focus on correct money handling and tested business logic.
 
 <picture>
