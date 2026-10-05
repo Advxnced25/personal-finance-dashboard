@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { getExpensesByCategory, getMonthlyTotals } from './chartData'
+import ExpensesByCategoryChart from './components/ExpensesByCategoryChart'
+import MonthlyChart from './components/MonthlyChart'
 import SummaryCards from './components/SummaryCards'
 import TransactionFilters from './components/TransactionFilters'
 import TransactionForm from './components/TransactionForm'
@@ -34,6 +37,17 @@ function App() {
     filterTransactions(transactions, activeFilters),
   )
   const summary = calculateSummary(visibleTransactions, BASE_CURRENCY)
+
+  // Each chart ignores the filter for the dimension it shows:
+  // the category chart would shrink to one bar, the monthly chart to one month
+  const categoryChartData = getExpensesByCategory(
+    filterTransactions(transactions, { ...activeFilters, category: ALL }),
+    BASE_CURRENCY,
+  )
+  const monthlyChartData = getMonthlyTotals(
+    filterTransactions(transactions, { ...activeFilters, month: ALL }),
+    BASE_CURRENCY,
+  )
 
   function handleSave(saved: Transaction) {
     if (editingTransaction) {
@@ -75,6 +89,17 @@ function App() {
 
       <TransactionFilters filters={activeFilters} months={months} onChange={setFilters} />
       <SummaryCards summary={summary} currency={BASE_CURRENCY} />
+
+      <div className="charts">
+        <section className="card">
+          <h3>Expenses by category</h3>
+          <ExpensesByCategoryChart data={categoryChartData} currency={BASE_CURRENCY} />
+        </section>
+        <section className="card">
+          <h3>Income vs expenses by month</h3>
+          <MonthlyChart data={monthlyChartData} currency={BASE_CURRENCY} />
+        </section>
+      </div>
 
       <h2>{editingTransaction ? 'Edit transaction' : 'Add transaction'}</h2>
       {/* A new key re-creates the form, so its fields are filled with fresh values */}

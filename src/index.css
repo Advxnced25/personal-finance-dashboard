@@ -1,6 +1,20 @@
 :root {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light dark;
+
+  /* Chart colors (checked for color-blind safety and contrast) */
+  --chart-income: #2a78d6;
+  --chart-expense: #eb6834;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #898781;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --chart-income: #3987e5;
+    --chart-expense: #d95926;
+    --chart-grid: #2c2c2a;
+  }
 }
 
 body {
@@ -62,6 +76,36 @@ main {
   margin: 0;
   font-size: 28px;
   font-weight: 600;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Chart text uses normal text colors; series colors are only for the bars */
+.charts .recharts-cartesian-axis-tick-value,
+.chart-label {
+  fill: var(--chart-axis);
+  font-size: 13px;
+}
+
+.chart-label {
+  fill: CanvasText;
+}
+
+/* Recharts sets these with inline styles, so !important is needed to follow the theme */
+.charts .recharts-default-tooltip {
+  background-color: Canvas !important;
+  border-color: var(--chart-grid) !important;
+  border-radius: 8px;
+}
+
+.charts .recharts-tooltip-item,
+.charts .recharts-legend-item-text {
+  color: CanvasText !important;
 }
 
 .transaction-form {

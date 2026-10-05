@@ -11,6 +11,15 @@ export function formatMoney(cents: number, currency: Currency): string {
   }).format(cents / 100)
 }
 
+// Short form for chart axes: formatMoneyCompact(250000, 'EUR') → '€2.5K'
+export function formatMoneyCompact(cents: number, currency: Currency): string {
+  return new Intl.NumberFormat('en-IE', {
+    style: 'currency',
+    currency,
+    notation: 'compact',
+  }).format(cents / 100)
+}
+
 // Turns cents into a plain string for an input field: 1250 → '12.50'
 export function centsToInputValue(cents: number): string {
   const whole = Math.floor(cents / 100)

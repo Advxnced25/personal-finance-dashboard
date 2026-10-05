@@ -29,10 +29,10 @@ export function filterTransactions(transactions: Transaction[], filters: Filters
   )
 }
 
-// '2026-10' → 'October 2026'
-export function formatMonth(month: string): string {
+// '2026-10' → 'October 2026' (long) or 'Oct 2026' (short)
+export function formatMonth(month: string, style: 'long' | 'short' = 'long'): string {
   const [year, monthNumber] = month.split('-').map(Number)
-  return new Intl.DateTimeFormat('en-IE', { month: 'long', year: 'numeric' }).format(
+  return new Intl.DateTimeFormat('en-IE', { month: style, year: 'numeric' }).format(
     new Date(year, monthNumber - 1),
   )
 }
