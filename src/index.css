@@ -13,6 +13,33 @@ main {
   padding: 32px 16px;
 }
 
+.transaction-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.transaction-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.transaction-form input,
+.transaction-form select,
+.transaction-form button {
+  font: inherit;
+  padding: 8px;
+}
+
+.form-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #dc2626;
+}
+
 .transactions {
   width: 100%;
   border-collapse: collapse;
