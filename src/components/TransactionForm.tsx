@@ -1,18 +1,8 @@
 import { useState } from 'react'
 import type { SubmitEvent } from 'react'
 import type { Transaction, TransactionType } from '../types'
+import { CATEGORIES } from '../categories'
 import { BASE_CURRENCY, centsToInputValue, parseMoneyToCents } from '../money'
-
-const CATEGORIES = [
-  'Salary',
-  'Freelance',
-  'Rent',
-  'Groceries',
-  'Transport',
-  'Entertainment',
-  'Health',
-  'Other',
-]
 
 // Today's date in the user's local timezone, as 'YYYY-MM-DD'
 function getToday(): string {

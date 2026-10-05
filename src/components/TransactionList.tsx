@@ -8,6 +8,10 @@ interface TransactionListProps {
 }
 
 function TransactionList({ transactions, onEdit, onDelete }: TransactionListProps) {
+  if (transactions.length === 0) {
+    return <p className="empty">No transactions found.</p>
+  }
+
   return (
     <table className="transactions">
       <thead>

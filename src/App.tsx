@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import SummaryCards from './components/SummaryCards'
+import TransactionFilters from './components/TransactionFilters'
 import TransactionForm from './components/TransactionForm'
 import TransactionList from './components/TransactionList'
+import { ALL, filterTransactions, getMonths, sortByDateNewestFirst } from './filters'
+import type { Filters } from './filters'
 import { mockTransactions } from './mockTransactions'
 import { BASE_CURRENCY } from './money'
 import { loadTransactions, saveTransactions } from './storage'
@@ -14,14 +17,23 @@ function App() {
     () => loadTransactions() ?? mockTransactions,
   )
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [filters, setFilters] = useState<Filters>({ month: ALL, category: ALL })
 
   // Save to the browser every time the list changes
   useEffect(() => {
     saveTransactions(transactions)
   }, [transactions])
 
-  // Derived data: recalculated from transactions on every render, never stored in state
-  const summary = calculateSummary(transactions, BASE_CURRENCY)
+  // Derived data: recalculated from state on every render, never stored in state
+  const months = getMonths(transactions)
+  // If the selected month has no transactions anymore (e.g. after a delete), show all months
+  const activeFilters: Filters = months.includes(filters.month)
+    ? filters
+    : { ...filters, month: ALL }
+  const visibleTransactions = sortByDateNewestFirst(
+    filterTransactions(transactions, activeFilters),
+  )
+  const summary = calculateSummary(visibleTransactions, BASE_CURRENCY)
 
   function handleSave(saved: Transaction) {
     if (editingTransaction) {
@@ -31,7 +43,8 @@ function App() {
       )
       setEditingTransaction(null)
     } else {
-      // Create a new array (never change state directly): newest first
+      // Create a new array (never change state directly). Adding to the front keeps
+      // the latest entry on top among transactions with the same date.
       setTransactions([saved, ...transactions])
     }
   }
@@ -60,6 +73,7 @@ function App() {
       <h1>Personal Finance Dashboard</h1>
       <p>Track your income and expenses in one place.</p>
 
+      <TransactionFilters filters={activeFilters} months={months} onChange={setFilters} />
       <SummaryCards summary={summary} currency={BASE_CURRENCY} />
 
       <h2>{editingTransaction ? 'Edit transaction' : 'Add transaction'}</h2>
@@ -73,7 +87,7 @@ function App() {
 
       <h2>Transactions</h2>
       <TransactionList
-        transactions={transactions}
+        transactions={visibleTransactions}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
