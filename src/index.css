@@ -1,155 +1,345 @@
-:root {
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  color-scheme: light dark;
+/* ==========================================================================
+   1. Design tokens — every color, size and radius used in the app.
+      Text colors are checked for WCAG contrast (>= 4.5:1).
+   ========================================================================== */
 
-  /* Chart colors (checked for color-blind safety and contrast) */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --page: #f6f6f4;
+  --surface: #ffffff;
+  --surface-hover: #f1f1ee;
+  --border: #e3e2dc;
+
+  /* Text */
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #6b6a66;
+
+  /* Meaning */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --on-accent: #ffffff;
+  --income: #15803d;
+  --expense: #b91c1c;
+
+  /* Charts (checked for color-blind safety and contrast) */
   --chart-income: #2a78d6;
   --chart-expense: #eb6834;
   --chart-grid: #e1e0d9;
-  --chart-axis: #898781;
+  --chart-axis: #6b6a66;
+
+  /* Shape and spacing */
+  --radius: 12px;
+  --radius-small: 8px;
+  --gap: 16px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 2px 8px rgb(0 0 0 / 0.04);
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    color-scheme: dark;
+
+    --page: #0f0f0e;
+    --surface: #1a1a19;
+    --surface-hover: #242422;
+    --border: #2e2e2b;
+
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #9c9b95;
+
+    --income: #4ade80;
+    --expense: #f87171;
+
     --chart-income: #3987e5;
     --chart-expense: #d95926;
     --chart-grid: #2c2c2a;
+    --chart-axis: #9c9b95;
+
+    --shadow: none;
   }
 }
 
+/* ==========================================================================
+   2. Base
+   ========================================================================== */
+
 body {
   margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
 }
 
 main {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
+.empty {
+  margin: 0;
   padding: 32px 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   3. Form controls and buttons
+   ========================================================================== */
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+input,
+select,
+button {
+  font: inherit;
+  font-size: 15px;
+}
+
+input,
+select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+button {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--surface-hover);
+}
+
+/* Visible outline for keyboard users (Tab key), hidden for mouse clicks */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.button-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.button-primary:hover {
+  background: var(--accent-hover);
+}
+
+.button-small {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.button-danger {
+  color: var(--expense);
+}
+
+/* ==========================================================================
+   4. Layout: header, cards, charts, form
+   ========================================================================== */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-bottom: 24px;
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 24px;
 }
 
-.filters label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.card h3 {
+  margin: 0 0 12px;
   font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
-.filters select {
-  font: inherit;
-  padding: 8px;
-}
-
-.empty {
-  padding: 24px;
-  text-align: center;
-  opacity: 0.7;
+.section {
+  margin-top: var(--gap);
 }
 
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.card {
-  padding: 16px;
-  border: 1px solid #8884;
-  border-radius: 12px;
-}
-
-.card h3 {
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0.7;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap);
 }
 
 .card-value {
   margin: 0;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 30px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }
 
 .charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  align-items: start;
+  gap: var(--gap);
+  margin-top: var(--gap);
 }
 
-/* Chart text uses normal text colors; series colors are only for the bars */
-.charts .recharts-cartesian-axis-tick-value,
-.chart-label {
+/* Chart text uses text colors; series colors are only for the bars */
+.charts .recharts-cartesian-axis-tick-value {
   fill: var(--chart-axis);
   font-size: 13px;
 }
 
 .chart-label {
-  fill: CanvasText;
+  fill: var(--text-primary);
+  font-size: 13px;
 }
 
 /* Recharts sets these with inline styles, so !important is needed to follow the theme */
 .charts .recharts-default-tooltip {
-  background-color: Canvas !important;
-  border-color: var(--chart-grid) !important;
-  border-radius: 8px;
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  border-radius: var(--radius-small);
+  box-shadow: var(--shadow);
+}
+
+.charts .recharts-tooltip-label {
+  color: var(--text-secondary);
 }
 
 .charts .recharts-tooltip-item,
 .charts .recharts-legend-item-text {
-  color: CanvasText !important;
+  color: var(--text-primary) !important;
 }
 
 .transaction-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   align-items: end;
+  gap: 12px;
 }
 
-.transaction-form label {
+.form-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
+  gap: 8px;
 }
 
-.transaction-form input,
-.transaction-form select,
-.transaction-form button {
-  font: inherit;
-  padding: 8px;
+.form-buttons button {
+  flex: 1;
 }
 
 .form-error {
   grid-column: 1 / -1;
   margin: 0;
-  color: #dc2626;
+  color: var(--expense);
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   5. Transactions table
+   ========================================================================== */
+
+/* On narrow screens the table scrolls sideways inside its card, not the whole page */
+.table-wrapper {
+  overflow-x: auto;
 }
 
 .transactions {
   width: 100%;
   border-collapse: collapse;
+  font-size: 15px;
 }
 
-.transactions th,
-.transactions td {
+.transactions th {
   padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
   text-align: left;
-  border-bottom: 1px solid #8884;
 }
 
+.transactions td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.transactions tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.transactions tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.transactions .date {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.transactions .note {
+  color: var(--text-secondary);
+}
+
+/* Equal-width digits keep amounts aligned in the column */
 .transactions .amount {
   text-align: right;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 
 .transactions .actions {
@@ -161,10 +351,71 @@ main {
   margin-left: 8px;
 }
 
+.mobile-only {
+  display: none;
+}
+
 .income {
-  color: #16a34a;
+  color: var(--income);
 }
 
 .expense {
-  color: #dc2626;
+  color: var(--expense);
+}
+
+/* ==========================================================================
+   6. Phones
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  main {
+    padding-top: 24px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  /* Filters take their own full-width row under the title */
+  .filters {
+    width: 100%;
+  }
+
+  .filters label {
+    flex: 1;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card-value {
+    font-size: 26px;
+  }
+
+  /* Hide the note and date columns to make room for the buttons;
+     the date moves under the category name instead */
+  .transactions .note,
+  .transactions .date {
+    display: none;
+  }
+
+  .transactions .mobile-only {
+    display: block;
+    font-size: 13px;
+  }
+
+  .transactions th,
+  .transactions td {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .transactions .actions button + button {
+    margin-left: 4px;
+  }
+
+  .button-small {
+    padding: 0 10px;
+  }
 }

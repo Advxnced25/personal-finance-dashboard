@@ -84,10 +84,14 @@ function App() {
 
   return (
     <main>
-      <h1>Personal Finance Dashboard</h1>
-      <p>Track your income and expenses in one place.</p>
+      <header className="header">
+        <div>
+          <h1>Personal Finance Dashboard</h1>
+          <p className="subtitle">Track your income and expenses in one place.</p>
+        </div>
+        <TransactionFilters filters={activeFilters} months={months} onChange={setFilters} />
+      </header>
 
-      <TransactionFilters filters={activeFilters} months={months} onChange={setFilters} />
       <SummaryCards summary={summary} currency={BASE_CURRENCY} />
 
       <div className="charts">
@@ -101,21 +105,25 @@ function App() {
         </section>
       </div>
 
-      <h2>{editingTransaction ? 'Edit transaction' : 'Add transaction'}</h2>
-      {/* A new key re-creates the form, so its fields are filled with fresh values */}
-      <TransactionForm
-        key={editingTransaction?.id ?? 'new'}
-        editingTransaction={editingTransaction}
-        onSave={handleSave}
-        onCancel={() => setEditingTransaction(null)}
-      />
+      <section className="card section">
+        <h2>{editingTransaction ? 'Edit transaction' : 'Add transaction'}</h2>
+        {/* A new key re-creates the form, so its fields are filled with fresh values */}
+        <TransactionForm
+          key={editingTransaction?.id ?? 'new'}
+          editingTransaction={editingTransaction}
+          onSave={handleSave}
+          onCancel={() => setEditingTransaction(null)}
+        />
+      </section>
 
-      <h2>Transactions</h2>
-      <TransactionList
-        transactions={visibleTransactions}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <section className="card section">
+        <h2>Transactions</h2>
+        <TransactionList
+          transactions={visibleTransactions}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </section>
     </main>
   )
 }

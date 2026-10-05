@@ -112,12 +112,16 @@ function TransactionForm({ editingTransaction, onSave, onCancel }: TransactionFo
         />
       </label>
 
-      <button type="submit">{editingTransaction ? 'Save' : 'Add'}</button>
-      {editingTransaction && (
-        <button type="button" onClick={onCancel}>
-          Cancel
+      <div className="form-buttons">
+        <button type="submit" className="button-primary">
+          {editingTransaction ? 'Save' : 'Add'}
         </button>
-      )}
+        {editingTransaction && (
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+      </div>
 
       {error && <p className="form-error">{error}</p>}
     </form>
