@@ -11,6 +11,13 @@ export function formatMoney(cents: number, currency: Currency): string {
   }).format(cents / 100)
 }
 
+// Turns cents into a plain string for an input field: 1250 → '12.50'
+export function centsToInputValue(cents: number): string {
+  const whole = Math.floor(cents / 100)
+  const fraction = String(cents % 100).padStart(2, '0')
+  return `${whole}.${fraction}`
+}
+
 // Turns user input into cents without floating point math: '12.50' → 1250
 // Returns null if the input is not a valid positive amount.
 export function parseMoneyToCents(input: string): number | null {

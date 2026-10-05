@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { SubmitEvent } from 'react'
 import type { Transaction, TransactionType } from '../types'
-import { BASE_CURRENCY, parseMoneyToCents } from '../money'
+import { BASE_CURRENCY, centsToInputValue, parseMoneyToCents } from '../money'
 
 const CATEGORIES = [
   'Salary',
@@ -23,15 +23,21 @@ function getToday(): string {
 }
 
 interface TransactionFormProps {
-  onAdd: (transaction: Transaction) => void
+  // The transaction being edited, or null when adding a new one
+  editingTransaction: Transaction | null
+  onSave: (transaction: Transaction) => void
+  onCancel: () => void
 }
 
-function TransactionForm({ onAdd }: TransactionFormProps) {
-  const [type, setType] = useState<TransactionType>('expense')
-  const [amount, setAmount] = useState('')
-  const [category, setCategory] = useState(CATEGORIES[0])
-  const [date, setDate] = useState(getToday())
-  const [note, setNote] = useState('')
+function TransactionForm({ editingTransaction, onSave, onCancel }: TransactionFormProps) {
+  // Start with the edited transaction's values, or with empty fields for a new one
+  const [type, setType] = useState<TransactionType>(editingTransaction?.type ?? 'expense')
+  const [amount, setAmount] = useState(
+    editingTransaction ? centsToInputValue(editingTransaction.amount) : '',
+  )
+  const [category, setCategory] = useState(editingTransaction?.category ?? CATEGORIES[0])
+  const [date, setDate] = useState(editingTransaction?.date ?? getToday())
+  const [note, setNote] = useState(editingTransaction?.note ?? '')
   const [error, setError] = useState('')
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -44,11 +50,12 @@ function TransactionForm({ onAdd }: TransactionFormProps) {
       return
     }
 
-    onAdd({
-      id: crypto.randomUUID(),
+    onSave({
+      // Keep the id and currency when editing; create new ones for a new transaction
+      id: editingTransaction?.id ?? crypto.randomUUID(),
       type,
       amount: cents,
-      currency: BASE_CURRENCY,
+      currency: editingTransaction?.currency ?? BASE_CURRENCY,
       category,
       date,
       note: note.trim() || undefined,
@@ -115,7 +122,12 @@ function TransactionForm({ onAdd }: TransactionFormProps) {
         />
       </label>
 
-      <button type="submit">Add</button>
+      <button type="submit">{editingTransaction ? 'Save' : 'Add'}</button>
+      {editingTransaction && (
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
+      )}
 
       {error && <p className="form-error">{error}</p>}
     </form>

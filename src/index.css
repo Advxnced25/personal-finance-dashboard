@@ -83,6 +83,15 @@ main {
   white-space: nowrap;
 }
 
+.transactions .actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.transactions .actions button + button {
+  margin-left: 8px;
+}
+
 .income {
   color: #16a34a;
 }

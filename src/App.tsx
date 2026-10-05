@@ -13,6 +13,7 @@ function App() {
   const [transactions, setTransactions] = useState<Transaction[]>(
     () => loadTransactions() ?? mockTransactions,
   )
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
 
   // Save to the browser every time the list changes
   useEffect(() => {
@@ -22,9 +23,36 @@ function App() {
   // Derived data: recalculated from transactions on every render, never stored in state
   const summary = calculateSummary(transactions, BASE_CURRENCY)
 
-  function handleAdd(transaction: Transaction) {
-    // Create a new array (never change state directly): newest first
-    setTransactions([transaction, ...transactions])
+  function handleSave(saved: Transaction) {
+    if (editingTransaction) {
+      // Replace the old version with the edited one, keep the rest as is
+      setTransactions(
+        transactions.map((transaction) => (transaction.id === saved.id ? saved : transaction)),
+      )
+      setEditingTransaction(null)
+    } else {
+      // Create a new array (never change state directly): newest first
+      setTransactions([saved, ...transactions])
+    }
+  }
+
+  function handleEdit(transaction: Transaction) {
+    setEditingTransaction(transaction)
+    // The form is above the list — scroll up so the user sees it
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleDelete(id: string) {
+    if (!window.confirm('Delete this transaction? This cannot be undone.')) {
+      return
+    }
+    // Keep every transaction except the one with this id
+    setTransactions(transactions.filter((transaction) => transaction.id !== id))
+
+    // Don't keep editing a transaction that no longer exists
+    if (editingTransaction?.id === id) {
+      setEditingTransaction(null)
+    }
   }
 
   return (
@@ -34,11 +62,21 @@ function App() {
 
       <SummaryCards summary={summary} currency={BASE_CURRENCY} />
 
-      <h2>Add transaction</h2>
-      <TransactionForm onAdd={handleAdd} />
+      <h2>{editingTransaction ? 'Edit transaction' : 'Add transaction'}</h2>
+      {/* A new key re-creates the form, so its fields are filled with fresh values */}
+      <TransactionForm
+        key={editingTransaction?.id ?? 'new'}
+        editingTransaction={editingTransaction}
+        onSave={handleSave}
+        onCancel={() => setEditingTransaction(null)}
+      />
 
       <h2>Transactions</h2>
-      <TransactionList transactions={transactions} />
+      <TransactionList
+        transactions={transactions}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </main>
   )
 }

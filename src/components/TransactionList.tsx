@@ -3,9 +3,11 @@ import { formatMoney } from '../money'
 
 interface TransactionListProps {
   transactions: Transaction[]
+  onEdit: (transaction: Transaction) => void
+  onDelete: (id: string) => void
 }
 
-function TransactionList({ transactions }: TransactionListProps) {
+function TransactionList({ transactions, onEdit, onDelete }: TransactionListProps) {
   return (
     <table className="transactions">
       <thead>
@@ -14,6 +16,7 @@ function TransactionList({ transactions }: TransactionListProps) {
           <th>Category</th>
           <th>Note</th>
           <th className="amount">Amount</th>
+          <th className="actions">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -25,6 +28,14 @@ function TransactionList({ transactions }: TransactionListProps) {
             <td className={`amount ${transaction.type}`}>
               {transaction.type === 'expense' ? '−' : '+'}
               {formatMoney(transaction.amount, transaction.currency)}
+            </td>
+            <td className="actions">
+              <button type="button" onClick={() => onEdit(transaction)}>
+                Edit
+              </button>
+              <button type="button" onClick={() => onDelete(transaction.id)}>
+                Delete
+              </button>
             </td>
           </tr>
         ))}
