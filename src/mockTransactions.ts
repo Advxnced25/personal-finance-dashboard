@@ -1,0 +1,39 @@
+import type { Transaction } from './types'
+
+// Temporary sample data. Will be replaced by user input in stage 2.
+export const mockTransactions: Transaction[] = [
+  {
+    id: '1',
+    type: 'income',
+    amount: 250000,
+    currency: 'EUR',
+    category: 'Salary',
+    date: '2026-10-01',
+    note: 'October salary',
+  },
+  {
+    id: '2',
+    type: 'expense',
+    amount: 95000,
+    currency: 'EUR',
+    category: 'Rent',
+    date: '2026-10-02',
+  },
+  {
+    id: '3',
+    type: 'expense',
+    amount: 6745,
+    currency: 'EUR',
+    category: 'Groceries',
+    date: '2026-10-03',
+    note: 'Weekly shopping',
+  },
+  {
+    id: '4',
+    type: 'expense',
+    amount: 1250,
+    currency: 'EUR',
+    category: 'Transport',
+    date: '2026-10-04',
+  },
+]

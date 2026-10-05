@@ -12,3 +12,28 @@ main {
   margin: 0 auto;
   padding: 32px 16px;
 }
+
+.transactions {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions th,
+.transactions td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #8884;
+}
+
+.transactions .amount {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.income {
+  color: #16a34a;
+}
+
+.expense {
+  color: #dc2626;
+}
