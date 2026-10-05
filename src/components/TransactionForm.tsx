@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+import type { SubmitEvent } from 'react'
 import type { Transaction, TransactionType } from '../types'
-import { parseMoneyToCents } from '../money'
+import { BASE_CURRENCY, parseMoneyToCents } from '../money'
 
 const CATEGORIES = [
   'Salary',
@@ -34,7 +34,7 @@ function TransactionForm({ onAdd }: TransactionFormProps) {
   const [note, setNote] = useState('')
   const [error, setError] = useState('')
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     // Stop the browser from reloading the page
     event.preventDefault()
 
@@ -48,7 +48,7 @@ function TransactionForm({ onAdd }: TransactionFormProps) {
       id: crypto.randomUUID(),
       type,
       amount: cents,
-      currency: 'EUR',
+      currency: BASE_CURRENCY,
       category,
       date,
       note: note.trim() || undefined,

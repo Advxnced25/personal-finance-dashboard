@@ -1,5 +1,8 @@
 import type { Currency } from './types'
 
+// Main currency of the app. New transactions and totals use it.
+export const BASE_CURRENCY: Currency = 'EUR'
+
 // Turns cents into a readable string: formatMoney(1250, 'EUR') → '€12.50'
 export function formatMoney(cents: number, currency: Currency): string {
   return new Intl.NumberFormat('en-IE', {
